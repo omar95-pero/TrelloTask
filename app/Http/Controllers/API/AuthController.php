@@ -11,10 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 
-class ClientAuthController extends Controller
+class AuthController extends Controller
 {
 
-    public $UserWith = [];
 
     public function final_response($data = null, $message = '', $code = 200, $in_two_response = 'yes')
     {
@@ -30,12 +29,11 @@ class ClientAuthController extends Controller
     }
 
     // ===============================================================================
-    public function login()
+    public function login(Request $request)
     {
-        $credentials['email']      =  request()->email;
-        $credentials['password']        =  request()->passord;
+        $credentials['email']      =  $request->email;
+        $credentials['password']        =  $request->password;
         if (Auth::attempt($credentials)) {
-            return $this->final_response(null, 'Your account Is blocked', 409, 'no');
             $user                = Auth::user();
             $data_user           = User::where('id',  $user->id)->with($this->UserWith)->first();
             return $this->final_response($data_user, 'success', 200);
@@ -71,8 +69,6 @@ class ClientAuthController extends Controller
         return $this->final_response($data, 'success', 200, 'yes');
     }
     // ===============================================================================
-
-
 
 
 }
